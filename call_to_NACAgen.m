@@ -4,3 +4,10 @@ clear; clc; close all;
 
 % inputs: NACA code, cord length, number of panels
 [xU2, yU2, xL2, yL2] = NACA_gen([0 0 18] , 10, 10);
+
+figure()
+hold on
+plot(xU2,yU2)
+plot(xL2,yL2)
+ylim([-.5 .5])
+hold off
