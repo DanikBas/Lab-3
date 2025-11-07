@@ -1,5 +1,6 @@
 clear; clc; close all;
 
+%% ~~~~~~~~~~~~ Task 1 ~~~~~~~~~~~~~~
 % want NACA 0018 and 2418
 
 % inputs: NACA code, cord length, number of panels
