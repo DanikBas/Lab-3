@@ -5,3 +5,4 @@ clear; clc; close all;
 
 % inputs: NACA code, cord length, number of panels
 [xU1,yU1, xL1,yL1, xU2,yU2, xL2,yL2] = NACA_gen([0 0 18] , 10, 10);
+                                           %code   %cord_line  %#ofPanels
