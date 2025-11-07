@@ -27,8 +27,9 @@ clear; clc; close all;
 function [c_l, alpha] = ComputeAndPlotC_lvsAlpha(NACA)
 
     for n = 1:length(NACA)
+        code  = strToArray(NACA(n));
         % Get boundary Conditions
-        [xU2, yU2, xL2, yL2] = NACA_gen([0 0 18] , 10, 10);
+        [xU2, yU2, xL2, yL2] = NACA_gen(code , 10, 10);
 
             % x_b and y_b are the boundary coordinates starting at the trailing
             % edge and going clockwise 
@@ -57,11 +58,27 @@ function [c_l, alpha] = ComputeAndPlotC_lvsAlpha(NACA)
         hold off
         
     end
+end
 
-
-
-
- end
+function arr = strToArray(str)
+    % Ensure input is a string or character array
+    if ischar(str)
+        str = string(str);
+    end
+    
+    % Example rule: first two digits separate, last two combined
+    if strlength(str) ~= 4
+        error('Input string must have 4 characters.');
+    end
+    
+    % Split and convert
+    a = str2double(extractBetween(str, 1, 1));
+    b = str2double(extractBetween(str, 2, 2));
+    c = str2double(extractBetween(str, 3, 4));
+    
+    % Combine into array
+    arr = [a b c];
+end
 
 
 
