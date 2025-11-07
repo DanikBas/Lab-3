@@ -28,6 +28,7 @@ clear; clc; close all;
         c_l(i) = Vortex_Panel(x_b, y_b, alpha);
     end
     % Plot c_l vs num_panels
+    plot(c_l,numOfPanels)
 
 % ----Task 2.2------
     NACA = ["0006" "0012" "0018"];
