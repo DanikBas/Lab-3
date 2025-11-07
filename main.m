@@ -27,7 +27,7 @@ close all
 %% Functions
 function [c_l, alpha] = ComputeAndPlotC_lvsAlpha(NACA)
     % Get boundary Conditions
-    [xU1,yU1, xL1,yL1, xU2,yU2, xL2,yL2] = NACA_gen([0 0 18] , 10, 10); 
+    [xU2, yU2, xL2, yL2] = NACA_gen([0 0 18] , 10, 10);
     
     for n = 1:length(NACA)
         alpha = linspace(-10,10,40);
