@@ -34,20 +34,20 @@ function [c_l, alpha] = ComputeAndPlotC_lvsAlpha(NACA)
             % edge and going clockwise 
             % the leading edge is zero zero 
 
-            x_b = zeros(length(xL2) + length(xU2));
+            x_b = zeros(1, length(xL2) + length(xU2));
             x_b(1:length(xL2)) = xL2';
-            x_b(length(xL2)+1 : length(xU2)) = xU2;
+            x_b(length(xL2)+1 : length(xL2) + length(xU2)) = xU2;
 
-            y_b = zeros(length(yL2) + length(yU2));
+            y_b = zeros(1,length(yL2) + length(yU2));
             y_b(1:length(yL2)) = yL2';
-            y_b(length(yL2)+1 : length(yU2)) = yU2;
+            y_b(length(yL2)+1 : length(yL2) + length(yU2)) = yU2;
 
 
         alpha = linspace(-10,10,40);
         % Calculate c_l
         c_l = linspace(-10,10,40);
         for i = 1:length(c_l)
-            c_l(i) = Vortey_Panel(x_b, y_b, alpha(i));
+            c_l(i) = Vortex_Panel(x_b, y_b, alpha(i));
         end
 
         % PLot c_l vs alpha
