@@ -1,17 +1,16 @@
-clear
-close all
+clear; clc; close all;
 
 %% ~~~~~~~~~~ Task 2 ~~~~~~~~~~~
-% ----Task 2.1-----
-    % NACA 0012
-    % Varriables           
-    x_b = 0 ;
-    y_b = 0 ; 
-    alpha = 5;
-
-    c_l = Vortex_Panel(x_b, y_b, alpha);
-
-    % Plot c_l vs num_panels
+% % ----Task 2.1-----
+%     % NACA 0012
+%     % Varriables           
+%     x_b = 0 ;
+%     y_b = 0 ; 
+%     alpha = 5;
+% 
+%     c_l = Vortex_Panel(x_b, y_b, alpha);
+% 
+%     % Plot c_l vs num_panels
 
 % ----Task 2.2------
     NACA = ["0006" "0012" "0018"];
@@ -37,11 +36,11 @@ function [c_l, alpha] = ComputeAndPlotC_lvsAlpha(NACA)
 
             x_b = zeros(length(xL2) + length(xU2));
             x_b(1:length(xL2)) = xL2';
-            x_b(length(xL2)+1 + length(xU2)) = xU2;
+            x_b(length(xL2)+1 : length(xU2)) = xU2;
 
             y_b = zeros(length(yL2) + length(yU2));
             y_b(1:length(yL2)) = yL2';
-            y_b(length(yL2)+1 + length(yU2)) = yU2;
+            y_b(length(yL2)+1 : length(yU2)) = yU2;
 
 
         alpha = linspace(-10,10,40);
