@@ -6,8 +6,8 @@ clear; clc; close all;
     % Varriables           
     alpha = 5;
 
-    numOfPanels = linspace(1,100,100);
-    c_l = linspace(1,100,100);
+    numOfPanels = 1:30;
+    c_l = 1:30;
     for i = 1:length(numOfPanels)
          % Get boundary Conditions
         [xU2, yU2, xL2, yL2] = NACA_gen([0 0 12] , 10, i);
@@ -28,22 +28,29 @@ clear; clc; close all;
         c_l(i) = Vortex_Panel(x_b, y_b, alpha);
     end
     % Plot c_l vs num_panels
-    plot(c_l,numOfPanels)
+    figure()
+    sgtitle("Cl vs Number of Panels (5 degrees AoA)")
+    plot(numOfPanels, c_l,'-o', LineWidth=1, color ='r')
+    xlabel("Number of Panels")
+    ylabel("Cl")
 
-% ----Task 2.2------
-    NACA = ["0006" "0012" "0018"];
-    [c_l, alpha] = ComputeAndPlotC_lvsAlpha(NACA);
 
-
-
-%% ~~~~~~~~~~~~ Task 3 ~~~~~~~~~~~~~~~
-    NACA = ["0012" "2412" "4412"];
-    [c_l, alpha] = ComputeAndPlotC_lvsAlpha(NACA);
+% % ----Task 2.2------
+%     NACA = ["0006" "0012" "0018"];
+%     [c_l, alpha] = ComputeAndPlotC_lvsAlpha(NACA);
+% 
+% 
+% 
+% %% ~~~~~~~~~~~~ Task 3 ~~~~~~~~~~~~~~~
+%     NACA = ["0012" "2412" "4412"];
+%     [c_l, alpha] = ComputeAndPlotC_lvsAlpha(NACA);
 
 
 %% Functions
 function [c_l, alpha] = ComputeAndPlotC_lvsAlpha(NACA)
-
+    figure()
+    sgtitle("Cl vs Alpha (deg)")
+    grid on
     for n = 1:length(NACA)
         code  = strToArray(NACA(n));
         % Get boundary Conditions
@@ -62,19 +69,20 @@ function [c_l, alpha] = ComputeAndPlotC_lvsAlpha(NACA)
             y_b(length(yL2)+1 : length(yL2) + length(yU2)) = yU2;
 
 
-        alpha = linspace(-10,10,40);
+        alpha = linspace(-40,40,40);
         % Calculate c_l
-        c_l = linspace(-10,10,40);
+        c_l = linspace(-40,40,40);
         for i = 1:length(c_l)
             c_l(i) = Vortex_Panel(x_b, y_b, alpha(i));
         end
 
         % PLot c_l vs alpha
-        figure()
-        hold on
-        plot(alpha, c_l)
-        hold off
-        
+        subplot(2,2,n)
+        plot(alpha, c_l,LineWidth=1.5)
+        grid on
+        title("NACA " + NACA(n))
+        xlabel("alpha [deg]")
+        ylabel("Cl")
     end
 end
 
