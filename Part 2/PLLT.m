@@ -1,4 +1,4 @@
-function  [e,c_L,c_Di] = PLLT(b,a0_t,a0_r,c_t,c_r,aero_t,aero_r,geo_t,geo_r,N)
+function  [e,c_L,c_Di, delta] = PLLT(b,a0_t,a0_r,c_t,c_r,aero_t,aero_r,geo_t,geo_r,N)
 
 % e is the span efficiency factor (to be computed and returned)
 % c_L is the coefficient of lift (to be computed and returned)
@@ -27,7 +27,6 @@ AR = b^2 / S;
         
         % spanwise coordinate from 0 (root) to 1 (tip)
         eta = (1 - cos(theta)) / 2;
-
         % Linear chord distribution
         c = c_r + (c_t - c_r) * eta;
     
@@ -65,7 +64,7 @@ for n = 2:N
 %% Outputs
 e = 1 / (1+delta); 
 c_L = A(1)*pi*AR;
-c_Di = c_l^2 * (1+delta) / (pi* AR);
+c_Di = c_L^2 * (1+delta) / (pi* AR);
+
 
 end
-
