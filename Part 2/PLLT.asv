@@ -1,15 +1,51 @@
-function [taperRation,delta] = PLLT(AR, cord, G)
-% AR is aspect ratio
-% Taper ratio is c_t / c_r
-% chord (taper)
-% geometric twist angle
-% camber (zero-lift alpha) aka aerodynamic twist
-% 
+function  [e,c_L,c_Di] = PLLT(b,a0_t,a0_r,c_t,c_r,aero_t,aero_r,geo_t,geo_r,N)
 
+% e is the span efficiency factor (to be computed and returned)
+% c_L is the coefficient of lift (to be computed and returned)
+% c_Di is the induced coefficient of drag (to be computed and reported)
 
+% b is the span (in feet)
+% a0_t is the cross-sectional lift slope at the tips (per radian)
+% a0_r is the cross-sectional lift slope at the root (per radian)
+% c_t is the chord at the tips (in feet), c_r is the chord at the root (in feet)
+% aero_t is the zero-lift angle of attack at the tips (in radians)
+% aero_r is the zero-lift angle of attack at the root (in radians)
+% geo_t is the geometric angle of attack (geometric twist + α) at the tips (in radians)
+% geo_r is the geometric angle of attack (geometric twist + α) at the root (in radians)
+% N is the number of odd terms to include in the series expansion for circulation
 
+% feet to meters
+b = b * 0.3048;
 
+%% Solve for Fourier coefficients A_n
+alpha_eff = geo - a0L;
 
+% Build lifting-line system matrix B (size N×N)
+B = zeros(N, N);
+
+for i = 1:N
+    for j = 1:N
+        n = odd(j);  % odd Fourier index (1,3,5,...)
+        B(i,j) = sin(n * theta(i)) * ...
+                 ( a0(i)/(AR * (c(i)/c_r)) + n / sin(theta(i)) );
+    end
+end
+A = B \ alpha_eff;
+
+%% Aspect ratio calculation
+S = b * (c_r + c_t) / 2;   % trapezoidal area (ft^2)
+AR = b^2 / S;
+
+%% delta (induced drag factor)
+delta =0;
+for n = 2:N
+    temp = n * (A(n)/A(1))^2;
+    delta = delta + temp;
+
+%% Outputs
+e = 1 / (1+delta); 
+c_L = A(1)*pi*AR;
+c_Di = c_l^2 * (1+delta) / (pi* AR);
 
 end
 

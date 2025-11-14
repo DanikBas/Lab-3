@@ -17,7 +17,49 @@ function  [e,c_L,c_Di] = PLLT(b,a0_t,a0_r,c_t,c_r,aero_t,aero_r,geo_t,geo_r,N)
 % feet to meters
 b = b * 0.3048;
 
+% Solve for Fourier coefficients A_n
+        % Linear chord distribution
+        c = c_r + (c_t - c_r) * eta;
+    
+        % Zero-lift angle (aerodynamic twist)
+        a0L = aero_r + (aero_t - aero_r) * eta;
+    
+        % Geometric AoA (twist + global AoA)
+        geo = geo_r + (geo_t - geo_r) * eta;
+    
+        % Section lift-curve slope a0(y)
+        a0 = a0_r + (a0_t - a0_r) * eta;
+    
+        % Effective angle of attack
+        alpha_eff = geo - a0L;
 
+        % Build lifting-line system matrix B (size N×N)
+        B = zeros(N, N);
+        
+        for i = 1:N
+            for j = 1:N
+                n = odd(j);  % odd Fourier index (1,3,5,...)
+                B(i,j) = sin(n * theta(i)) * ...
+                         ( a0(i)/(AR * (c(i)/c_r)) + n / sin(theta(i)) );
+            end
+        end
+
+A = B \ alpha_eff;
+
+% Aspect ratio calculation
+S = b * (c_r + c_t) / 2;   % trapezoidal area (ft^2)
+AR = b^2 / S;
+
+% delta (induced drag factor)
+delta =0;
+for n = 2:N
+    temp = n * (A(n)/A(1))^2;
+    delta = delta + temp;
+
+%% Outputs
+e = 1 / (1+delta); 
+c_L = A(1)*pi*AR;
+c_Di = c_l^2 * (1+delta) / (pi* AR);
 
 end
 
