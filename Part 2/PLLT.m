@@ -27,7 +27,7 @@ AR = b^2 / S;
         
         % spanwise coordinate from 0 (root) to 1 (tip)
         eta = (1 - cos(theta)) / 2;
-        
+
         % Linear chord distribution
         c = c_r + (c_t - c_r) * eta;
     
