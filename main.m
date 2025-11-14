@@ -35,15 +35,17 @@ clear; clc; close all;
     ylabel("Cl")
 
 
-% % ----Task 2.2------
-%     NACA = ["0006" "0012" "0018"];
-%     [c_l, alpha] = ComputeAndPlotC_lvsAlpha(NACA);
-% 
-% 
-% 
-% %% ~~~~~~~~~~~~ Task 3 ~~~~~~~~~~~~~~~
-%     NACA = ["0012" "2412" "4412"];
-%     [c_l, alpha] = ComputeAndPlotC_lvsAlpha(NACA);
+% ----Task 2.2------
+    NACA = ["0006" "0012" "0018"];
+    [c_l, alpha] = ComputeAndPlotC_lvsAlpha(NACA);
+    alpha_L0 = interp1(c_l, alpha, 0, 'linear');
+    
+
+
+
+%% ~~~~~~~~~~~~ Task 3 ~~~~~~~~~~~~~~~
+    NACA = ["0012" "2412" "4412"];
+    [c_l, alpha] = ComputeAndPlotC_lvsAlpha(NACA);
 
 
 %% Functions
@@ -69,9 +71,9 @@ function [c_l, alpha] = ComputeAndPlotC_lvsAlpha(NACA)
             y_b(length(yL2)+1 : length(yL2) + length(yU2)) = yU2;
 
 
-        alpha = linspace(-40,40,40);
+        alpha = -20:20;
         % Calculate c_l
-        c_l = linspace(-40,40,40);
+        c_l = -20:20;
         for i = 1:length(c_l)
             c_l(i) = Vortex_Panel(x_b, y_b, alpha(i));
         end
