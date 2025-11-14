@@ -56,7 +56,7 @@ function [c_l, alpha] = ComputeAndPlotC_lvsAlpha(NACA)
     for n = 1:length(NACA)
         code  = strToArray(NACA(n));
         % Get boundary Conditions
-        [xU, yU, xL, yL] = NACA_gen(code , 10, 10);
+        [xU2, yU2, xL2, yL2] = NACA_gen(code , 10, 10);
 
             % x_b and y_b are the boundary coordinates starting at the trailing
             % edge and going clockwise 
@@ -69,8 +69,7 @@ function [c_l, alpha] = ComputeAndPlotC_lvsAlpha(NACA)
             % y_b = zeros(1,length(yL2) + length(yU2));
             % y_b(1:length(yL2)) = yL2';
             % y_b(length(yL2)+1 : length(yL2) + length(yU2)) = yU2;
-            x_b = [fliplr(xU), xL(2:end)];
-            y_b = [fliplr(yU), yL(2:end)];
+            x_b = [fliplr(xU)]
 
 
         alpha = -20:20;
