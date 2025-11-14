@@ -5,7 +5,7 @@ alpha = 5;
 
 % Task 2.1
 
-panels_total = linspace(2,400,200);
+panels_total = 1:200;
 % 4:2:200;
 
 
@@ -35,11 +35,17 @@ Cl_final = Cl(end);
 Cl_target = 0.99*Cl_final;
 
 figure()
-plot(panels_total, Cl)
 hold on;
-yline(Cl_target)
-hold on;
-xline(Panel99)
+panels_total = panels_total*2;
+plot(panels_total, Cl, Color='b', LineWidth=1)
+    % 1% error bars
+    exact = Cl(end);
+    yline(exact, Color='g',LineWidth=.5)
+    yline(exact + exact/100, Color='r',LineWidth=.5, linestyle='--')
+    yline(exact - exact/100, Color='r',LineWidth=.5, LineStyle='--')
+    [~, idx] = min(abs(Cl - (exact - exact/100)));
+xline(panels_total(idx))
+legend("Cl", "'Exact' solution", "+-1% error",'Location','southeast')
 hold off;
 
 % Task 2.2
