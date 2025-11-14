@@ -5,7 +5,8 @@ alpha = 5;
 
 % Task 2.1
 
-panels_total = 4:2:200;
+panels_total = linspace(2,400,200);
+% 4:2:200;
 
 Cl = zeros(size(panels_total));
 
