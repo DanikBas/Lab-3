@@ -17,7 +17,16 @@ function  [e,c_L,c_Di] = PLLT(b,a0_t,a0_r,c_t,c_r,aero_t,aero_r,geo_t,geo_r,N)
 % feet to meters
 b = b * 0.3048;
 
+% Aspect ratio calculation
+S = b * (c_r + c_t) / 2;   % trapezoidal area (ft^2)
+AR = b^2 / S;
+
 % Solve for Fourier coefficients A_n
+        odd = (1:2:(2*N-1))';            % N odd integers
+        theta = odd * pi / (2*N);        % collocation angles (Nx1)
+        
+        % spanwise coordinate from 0 (root) to 1 (tip)
+        eta = (1 - cos(theta)) / 2;
         % Linear chord distribution
         c = c_r + (c_t - c_r) * eta;
     
@@ -45,10 +54,6 @@ b = b * 0.3048;
         end
 
 A = B \ alpha_eff;
-
-% Aspect ratio calculation
-S = b * (c_r + c_t) / 2;   % trapezoidal area (ft^2)
-AR = b^2 / S;
 
 % delta (induced drag factor)
 delta =0;
