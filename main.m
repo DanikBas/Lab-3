@@ -81,7 +81,7 @@ function [c_l, alpha] = ComputeAndPlotC_lvsAlpha(NACA)
         end
 
         % PLot c_l vs alpha
-        subplot(2,2,n)
+        subplot(1,3,n)
         c_l = c_l *100;
         plot(alpha, c_l,LineWidth=1.5)
         grid on
