@@ -1,0 +1,15 @@
+function [taperRation,delta] = PLLT(AR, cord, G)
+% AR is aspect ratio
+% Taper ratio is c_t / c_r
+% chord (taper)
+% geometric twist angle
+% camber (zero-lift alpha) aka aerodynamic twist
+% 
+
+
+
+
+
+
+end
+
