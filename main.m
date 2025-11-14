@@ -10,19 +10,21 @@ clear; clc; close all;
     c_l = 1:30;
     for i = 1:length(numOfPanels)
          % Get boundary Conditions
-        [xU2, yU2, xL2, yL2] = NACA_gen([0 0 12] , 10, i);
+        [xU, yU, xL, yL] = NACA_gen([0 0 12] , 10, i);
 
             % x_b and y_b are the boundary coordinates starting at the trailing
             % edge and going clockwise 
             % the leading edge is zero zero 
 
-            x_b = zeros(1, length(xL2) + length(xU2));
-            x_b(1:length(xL2)) = xL2';
-            x_b(length(xL2)+1 : length(xL2) + length(xU2)) = xU2;
-
-            y_b = zeros(1,length(yL2) + length(yU2));
-            y_b(1:length(yL2)) = yL2';
-            y_b(length(yL2)+1 : length(yL2) + length(yU2)) = yU2;
+            % x_b = zeros(1, length(xL2) + length(xU2));
+            % x_b(1:length(xL2)) = xL2';
+            % x_b(length(xL2)+1 : length(xL2) + length(xU2)) = xU2;
+            % 
+            % y_b = zeros(1,length(yL2) + length(yU2));
+            % y_b(1:length(yL2)) = yL2';
+            % y_b(length(yL2)+1 : length(yL2) + length(yU2)) = yU2;
+            x_b = [fliplr(xU), xL(2:end)];
+            y_b = [fliplr(yU), yL(2:end)];
 
 
         c_l(i) = Vortex_Panel(x_b, y_b, alpha);
