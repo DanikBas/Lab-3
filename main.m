@@ -56,7 +56,7 @@ function [c_l, alpha] = ComputeAndPlotC_lvsAlpha(NACA)
     for n = 1:length(NACA)
         code  = strToArray(NACA(n));
         % Get boundary Conditions
-        [xU, yU, xL, yL] = NACA_gen(code , 10, 10);
+        [xU, yU, xL, yL] = NACA_gen(code , 1, 150);
 
             % x_b and y_b are the boundary coordinates starting at the trailing
             % edge and going clockwise 
@@ -82,6 +82,7 @@ function [c_l, alpha] = ComputeAndPlotC_lvsAlpha(NACA)
 
         % PLot c_l vs alpha
         subplot(2,2,n)
+        c_l = c_l *100;
         plot(alpha, c_l,LineWidth=1.5)
         grid on
         title("NACA " + NACA(n))
