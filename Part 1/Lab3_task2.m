@@ -8,6 +8,7 @@ alpha = 5;
 panels_total = linspace(2,400,200);
 % 4:2:200;
 
+
 Cl = zeros(size(panels_total));
 
 for i = 1:length(panels_total)
@@ -26,8 +27,10 @@ for i = 1:length(panels_total)
     Cl(i) = 1000*Vortex_Panel(x_b, y_b, alpha);
 end
 
+dos_panels_total = 2.*panels_total;
 
-Panel99 = Find99Percent(panels_total, Cl);
+
+Panel99 = Find99Percent(dos_panels_total, Cl);
 Cl_final = Cl(end);
 Cl_target = 0.99*Cl_final;
 
@@ -88,9 +91,9 @@ function [c_l, alpha] = ComputeAndPlotC_lvsAlpha(NACA)
         end
 
         % PLot c_l vs alpha
-        subplot(2,2,n)
         c_l = c_l *100;
         plot(alpha, c_l,LineWidth=1.5)
+        hold on;
         grid on
         title("NACA " + NACA(n))
         xlabel("alpha [deg]")
