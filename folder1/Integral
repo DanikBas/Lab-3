@@ -1,0 +1,7 @@
+%Integral function
+
+y = linspace(0,b,(b/100));
+fun = @(y) c_d(y)*c(y);
+
+CD_0 = (1/S)*integral(fun,(-b/2),(b/2));
+
