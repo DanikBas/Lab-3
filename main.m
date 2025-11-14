@@ -7,7 +7,7 @@ clear; clc; close all;
     alpha = 5;
 
     numOfPanels = 1:200;
-    c_l = 1:30;
+    c_l = 1:200;
     for i = 1:length(numOfPanels)
          % Get boundary Conditions
         [xU, yU, xL, yL] = NACA_gen([0 0 12] , 10, i);
@@ -37,18 +37,18 @@ clear; clc; close all;
     ylabel("Cl")
 
 
-% ----Task 2.2------
-    NACA = ["0006" "0012" "0018"];
-    [c_l, alpha] = ComputeAndPlotC_lvsAlpha(NACA);
-    alpha_L0 = interp1(c_l, alpha, 0, 'linear');
-    
-
-
-
-%% ~~~~~~~~~~~~ Task 3 ~~~~~~~~~~~~~~~
-    NACA = ["0012" "2412" "4412"];
-    [c_l, alpha] = ComputeAndPlotC_lvsAlpha(NACA);
-
+% % ----Task 2.2------
+%     NACA = ["0006" "0012" "0018"];
+%     [c_l, alpha] = ComputeAndPlotC_lvsAlpha(NACA);
+%     alpha_L0 = interp1(c_l, alpha, 0, 'linear');
+% 
+% 
+% 
+% 
+% %% ~~~~~~~~~~~~ Task 3 ~~~~~~~~~~~~~~~
+%     NACA = ["0012" "2412" "4412"];
+%     [c_l, alpha] = ComputeAndPlotC_lvsAlpha(NACA);
+% 
 
 %% Functions
 function [c_l, alpha] = ComputeAndPlotC_lvsAlpha(NACA)
