@@ -1,5 +1,5 @@
 
-function [xU, yU, xL, yL] = NACAgen(code, c, n)
+function [xU, yU, xL, yL] = NACA_gen(code, c, n)
 
 % writing a NACA function
 % n is number of panels 
@@ -18,7 +18,44 @@ t = (code(3)) / 100; % thickness ratio
 
 
 % thickness
-yt = 5 * t * (0.2969*sqrt(x/c) - 0.1260*(x/c) - 0.3516*(x/c).^2 + 0.2843*(x/c).^3 - 0.1015*(x/c).^4);
+yt = zeros(size(x));
+
+% Mean camber line and slope
+yc = zeros(size(x));
+dyc_dx = zeros(size(x));
+
+if p ~= 0
+    for i = 1:length(x)
+        if x(i) < (p * c)
+            %yc(i) = m * (x(i)/(p^2)) * (2*p - x(i)/c);
+            yc(i) = m * (2*p*(x(i)/c) - (x(i)/c)^2) / p^2;
+            dyc_dx(i) = (2*m/(p^2)) * (p - x(i)/c);
+        else
+            %yc(i) = m * ((c - x(i))/((1 - p)^2)) * (1 + x(i)/c - 2*p);
+            yc(i) = m * ((1-2*p + 2*p*(x(i)/c) - (x(i)/c)^2)) / (1-p)^2 ;
+            dyc_dx(i) = (2*m/((1 - p)^2)) * (p - x(i)/c);
+        end
+    end
+end
+
+for i = 1:length(x)
+           yt(i) = 5 * t * (0.2969*sqrt(x(i)/c) - 0.1260*(x(i)/c) - 0.3516*(x(i)/c).^2 + 0.2843*(x(i)/c).^3 - 0.1015*(x(i)/c).^4);
+end
+
+
+% Local camberline angle
+theta = atan(dyc_dx);
+
+% Upper and lower surfaces
+xU = x - yt .* sin(theta);
+yU = yc + yt .* cos(theta);
+xL = x + yt .* sin(theta);
+yL = yc - yt .* cos(theta);
+
+%rupkuvarba.rathod@colorado.edu
+
+
+end
 
 
 % % mean camber line
@@ -50,33 +87,3 @@ yt = 5 * t * (0.2969*sqrt(x/c) - 0.1260*(x/c) - 0.3516*(x/c).^2 + 0.2843*(x/c).^
 % % lower y coordinates 
 % yL1 = yc1 - yt.*cos(xi1);
 % yL2 = yc2 - yt.*cos(xi2);
-
-
-% Mean camber line and slope
-yc = zeros(size(x));
-dyc_dx = zeros(size(x));
-
-if p ~= 0
-    for i = 1:length(x)
-        if x(i) < p * c
-            yc(i) = m * (x(i)/(p^2)) * (2*p - x(i)/c);
-            dyc_dx(i) = (2*m/(p^2)) * (p - x(i)/c);
-        else
-            yc(i) = m * ((c - x(i))/((1 - p)^2)) * (1 + x(i)/c - 2*p);
-            dyc_dx(i) = (2*m/((1 - p)^2)) * (p - x(i)/c);
-        end
-    end
-end
-
-% Local camberline angle
-theta = atan(dyc_dx);
-
-% Upper and lower surfaces
-xU = x - yt .* sin(theta);
-yU = yc + yt .* cos(theta);
-xL = x + yt .* sin(theta);
-yL = yc - yt .* cos(theta);
-
-
-
-end

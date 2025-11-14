@@ -6,7 +6,7 @@ clear; clc; close all;
     % Varriables           
     alpha = 5;
 
-    numOfPanels = 1:30;
+    numOfPanels = 1:200;
     c_l = 1:30;
     for i = 1:length(numOfPanels)
          % Get boundary Conditions
