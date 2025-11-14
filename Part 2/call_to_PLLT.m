@@ -38,5 +38,20 @@ c_L = 0.6674;
 
 c_Di = 0.0130;
 
-[e,c_L,c_Di] = PLLT(b,a0_t,a0_r,c_t,c_r,aero_t,aero_r,geo_t,geo_r,N);
+
+
+
+% plot taper ratio vs delta
+c_r = 10;
+c_t = linspace(0,c_r,50);
+for i = 1:(length(c_t))
+
+
+
+taper_ratio(i) = c_t(i)/c_r;
+[e,c_L,c_Di,delta(i)] = PLLT(b,a0_t,a0_r,c_t(i),c_r,aero_t,aero_r,geo_t,geo_r,N);
+end
+
+figure(1)
+plot(taper_ratio, delta)
 
