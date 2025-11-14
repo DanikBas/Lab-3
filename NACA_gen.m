@@ -1,5 +1,5 @@
 
-function [xU, yU, xL, yL] = NACA_gen(code, c, n)
+function [xU, yU, xL, yL, x_c, y_c] = NACA_gen(code, c, n)
 
 % writing a NACA function
 % n is number of panels 
@@ -51,6 +51,11 @@ xU = x - yt .* sin(theta);
 yU = yc + yt .* cos(theta);
 xL = x + yt .* sin(theta);
 yL = yc - yt .* cos(theta);
+
+% camber line
+x_c = x;
+y_c = yc;
+
 
 %rupkuvarba.rathod@colorado.edu
 
