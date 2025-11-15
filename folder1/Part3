@@ -35,22 +35,66 @@ ylabel('C_L');
 title('Cessna 180: C_L vs Tip Angle of Attack');
 
 %---------Task 2-----------------
-alpha = linspace(-10,6,17);
+alpha = linspace(-10,6,9);
 %tip NACA 0012
 cl_exp_tip = linspace(-0.8,0.8,9);
 cd_exp_tip = [0.018,0.0135,0.0115,0.0102,0.0098,0.0103,0.0115,0.014,0.018];
 
 %Root NACA 2412
-cl_exp_root = linspace(-0.8,1,10); 
-cd_exp_root = [0.022,0.017,0.013,0.011,0.010,0.0099,0.010,0.011,0.0135,0.0175];
+cl_exp_root = linspace(-0.8,1,9); 
+cd_exp_root = [0.022,0.017,0.013,0.011,0.010,0.0099,0.010,0.011,0.0135];
 
-
+%check experimental data by plotting
+%cl vs cd tip
 figure;
 hold on
 xlim([-1.6 , 1.6])
 ylim([0,0.030]);
 plot(cl_exp_tip,cd_exp_tip);
+
+p_tip = polyfit(cl_exp_tip,cd_exp_tip,2);
+x_fit_tip = linspace( min(cl_exp_tip),max(cl_exp_tip),200);
+y_fit_tip = polyval(p_tip,x_fit_tip);
+plot(x_fit_tip,y_fit_tip);
+hold off
+
+%cl vs cd root
 figure;
+hold on
 plot(cl_exp_root,cd_exp_root);
 xlim([-1.6 , 1.6])
 ylim([0,0.030]);
+p_root = polyfit(cl_exp_root,cd_exp_root,2);
+x_fit_root = linspace( min(cl_exp_root),max(cl_exp_root),200);
+y_fit_root = polyval(p_root,x_fit_root);
+plot(x_fit_root,y_fit_root);
+
+hold off;
+
+%cl vs alpha tip
+p_tip2 = polyfit(alpha,cl_exp_tip,1);
+
+%cl vs alpha tip
+p_root2 = polyfit(alpha,cl_exp_root,1);
+
+%cl using fit to alpha
+X = alpha*p_tip2(1) + p_tip2(2);
+X2 = alpha*p_root2(1)+p_root(2);
+
+%cd using cl from ^
+cd_fit_tip = X.^2 *p_tip(1) + p_tip(2)*X + p_tip(3);
+cd_fit_root = X2.^2 *p_root(1) + p_root(2)*X2 + p_root(3);
+
+figure;
+hold on
+xlim([-1.6 , 1.6])
+ylim([0,0.030]); 
+plot(cl_exp_tip,cd_fit_tip);
+plot(cl_exp_tip,cd_exp_tip);
+
+figure;
+hold on
+xlim([-1.6 , 1.6])
+ylim([0,0.030]);
+plot(cl_exp_root,cd_fit_root);
+plot(cl_exp_root,cd_exp_root);
