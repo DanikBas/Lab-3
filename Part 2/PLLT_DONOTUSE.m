@@ -1,73 +1,48 @@
-function [taperRation,delta] = PLLT(AR, chord, GTA, camber, SLS)
+function [e, c_L, c_Di, delta] = PLLT(b,a0_t,a0_r,c_t,c_r,aero_t,aero_r,geo_t,geo_r,N)
 
-% delta induced drag factor
-% Taper ratio is c_t / c_r  
+% --- Aspect Ratio (do NOT convert to meters – keep consistent units)
+S = b * (c_r + c_t)/2;
+AR = b^2 / S;
 
-% AR is aspect ratio
-% chord (taper)                 chord
-% geometric twist angle         GTA
-% camber (zero-lift alpha) aka aerodynamic twist    
-% sectional lift slope          SLS
+% --- Correct collocation points ---
+theta = ( (1:N)' ) * pi/(2*N);
 
+% --- Spanwise interpolation (eta = 0→root, 1→tip) ---
+y  = (b/2) * cos(theta);        % positive root → tip
+eta = y / (b/2);                % = cos(theta)
 
-% Unpack inputs
-c_r = chord(1);
-c_t = chord(2);
+c_loc   = c_r   + (c_t   - c_r)   .* eta;
+a0_loc  = a0_r  + (a0_t  - a0_r)  .* eta;
+aero_loc = aero_r + (aero_t - aero_r).*eta;
+geo_loc  = geo_r  + (geo_t  - geo_r) .*eta;
 
-twist_r = deg2rad(GTA(1));
-twist_t = deg2rad(GTA(2));
+alpha_eff = geo_loc - a0_loc;
 
-alpha0_r = deg2rad(camber(1));
-alpha0_t = deg2rad(camber(2));
+% --- Odd Fourier indices ---
+odd = (1:2:(2*N-1))';
 
-a0_r = SLS(1);   % [1/rad]
-a0_t = SLS(2);
-
-% -------------------------------
-% Output 1: taper ratio
-taperRatio = c_t / c_r;
-
-% -------------------------------
-% Fourier series order for PLLT
-N = 3;
-
-% Collocation points
-j = (1:N)';
-theta = (2*j - 1) * pi/(2*N);
-
-% Spanwise coordinate from 0 (root) to 1 (tip)
-eta = (1 - cos(theta)) / 2;
-
-% Linear spanwise distributions
-c     = c_r     + (c_t     - c_r)     * eta;   % chord
-twist = twist_r + (twist_t - twist_r) * eta;   % geometric twist
-alpha0 = alpha0_r + (alpha0_t - alpha0_r) * eta; % zero-lift AoA
-a0    = a0_r    + (a0_t    - a0_r)    * eta;   % sectional lift slope
-
-% Effective AoA (global = 0 for PLLT)
-alpha = 0;
-alpha_eff = alpha - twist - alpha0;   % Nx1
-
-% -------------------------------
-% Build PLLT linear system
-B = zeros(N,N);
+% --- Build M matrix ---
+M = zeros(N,N);
 for i = 1:N
-    for n = 1:N
-        B(i,n) = sin(n*theta(i)) * ...
-                 ( a0(i)/(AR * (c(i)/c_r)) + n/sin(theta(i)) );
+    th = theta(i);
+    for j = 1:N
+        n = odd(j);
+        term1 = (4*b) / ( a0_loc(i)*c_loc(i) ) * sin(n*th);
+        term2 = n * sin(n*th) / sin(th);
+        M(i,j) = term1 + term2;
     end
 end
 
-% Solve for Fourier coefficients A_n
-A = B \ alpha_eff;
+% --- Solve for A coefficients ---
+A = M \ alpha_eff;
+A1 = A(1);
 
-% -------------------------------
-% Compute induced-drag factor δ
-n = (1:N)';
-delta = ( sum( n .* A.^2 ) )/A(1)^2 - 1;
+% --- Induced drag factor delta ---
+delta = sum( odd(2:end) .* (A(2:end)/A1).^2 );
 
-
-
+% --- Outputs ---
+e    = 1/(1 + delta);
+c_L  = pi * AR * A1;
+c_Di = c_L^2 * (1 + delta) / (pi * AR);
 
 end
-
