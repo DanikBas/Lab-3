@@ -45,6 +45,16 @@ AR = b^2 / S;
         % Build lifting-line system matrix B (size N×N)
         B = zeros(N, N);
         
+
+% Linear spanwise distributions (at each collocation)
+c_loc    = c_r + (c_t - c_r) .* eta;       % chord at collocation (ft)
+a0L_loc  = aero_r + (aero_t - aero_r) .* eta; % zero-lift angle (rad)
+geo_loc  = geo_r  + (geo_t  - geo_r)  .* eta; % geometric AoA (rad)
+a0_loc   = a0_r  + (a0_t  - a0_r)  .* eta;    % sectional lift slope (per rad)
+
+alpha_eff = geo_loc - a0L_loc;    % RHS (Nx1)
+
+
         for i = 1:N
             for j = 1:N
                 n = odd(j);  % odd Fourier index (1,3,5,...)
@@ -53,18 +63,51 @@ AR = b^2 / S;
             end
         end
 
-A = B \ alpha_eff;
+% A = B \ alpha_eff;
+% 
+% % delta (induced drag factor)
+% delta =0;
+% for n = 2:N
+% 
+%     j = odd(n);
+%     temp = j * (A(n)/A(1))^2;
+%     delta = delta + temp;
+% 
+% %% Outputs
+% e = 1 / (1+delta); 
+% c_L = A(1)*pi*AR;
+% c_Di = c_L^2 * (1+delta) / (pi* AR);
 
-% delta (induced drag factor)
-delta =0;
-for n = 2:N
-    temp = n * (A(n)/A(1))^2;
-    delta = delta + temp;
 
-%% Outputs
-e = 1 / (1+delta); 
-c_L = A(1)*pi*AR;
-c_Di = c_L^2 * (1+delta) / (pi* AR);
+% Build system matrix M (NxN)
+M = zeros(N,N);
+for i = 1:N
+    th = theta(i);
+    for j = 1:N
+        n = odd(j);
+        % First term uses local a0 and chord
+        term1 = (4 * b/2) / ( a0_loc(i) * c_loc(i) ) * sin(n * th);
+        term2 = ( n * sin(n*th) ) / sin(th);
+        M(i,j) = term1 + term2;
+    end
+end
+
+
+% Solve for A coefficients: A = [A1, A3, A5, ...]^T
+A = M \ alpha_eff;    % Nx1
+
+% Compute delta = sum_{j=2..N} n * (A_j / A1)^2  (n = 2j-1)
+A1 = A(1);
+delta = 0;
+for j = 2:N
+    n = odd(j);
+    delta = delta + n * (A(j)/A1)^2;
+end
+
+% Outputs
+e = 1 / (1 + delta);                 % span efficiency
+c_L = pi * AR * A1;                  % lift coefficient
+c_Di = c_L^2 * (1 + delta) / (pi * AR);  % induced drag coefficient
 
 
 end
