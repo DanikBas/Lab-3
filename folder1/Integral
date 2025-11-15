@@ -5,3 +5,13 @@ fun = @(y) c_d(y)*c(y);
 
 CD_0 = (1/S)*integral(fun,(-b/2),(b/2));
 
+% Also chord distirubtion along the wing span
+ 
+% span is 36 ft
+%middle section is 16 ft 8 in
+%so the outside lengths are 9' 8''
+
+c_init = linspace(c_r,c_t,116);
+%116 is the amount of inches from 9' 8''
+
+c_fin = linspace(c_t,c_r,116);
