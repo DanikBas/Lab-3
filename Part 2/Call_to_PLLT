@@ -1,0 +1,50 @@
+clc; clear; close all
+
+% Aspect ratios to plot
+AR_list = [10 8 6 4];
+
+% Arbitrary span for all cases (units cancel)
+b = 10;
+
+% Aerodynamic assumptions for textbook curves
+a0_r = 2*pi;    % lift curve slope constant
+a0_t = 2*pi;
+aero_r = 0;     % zero-lift angle constant
+aero_t = 0;
+geo_r  = 6*pi/180;   % constant AoA
+geo_t  = geo_r;
+
+Nterms = 40;          % number of odd terms
+lambdaVals = linspace(0.01,1,80);   % taper ratio (ct/cr)
+
+figure; hold on; grid on;
+
+colors = lines(length(AR_list));
+
+for m = 1:length(AR_list)
+    
+    AR = AR_list(m);
+    
+    % sumChord ensures AR = b^2 / S is constant
+    sumChord = 2*b / AR;    
+    
+    deltaVals = zeros(size(lambdaVals));
+    
+    for k = 1:length(lambdaVals)
+        lambda = lambdaVals(k);
+
+        % Maintain constant AR by adjusting c_r and c_t
+        c_r = sumChord / (1 + lambda);
+        c_t = lambda * c_r;
+        global delta
+        [e, CL, CDi] = PLLT(b, a0_t, a0_r, c_t, c_r,aero_t, aero_r, geo_t, geo_r,Nterms);
+        deltaVals(k) = delta;
+    end
+
+    plot(lambdaVals, deltaVals, 'LineWidth', 2, 'Color', colors(m,:));
+end
+
+xlabel('Taper Ratio c_t/c_r');
+ylabel('\delta');
+title('\delta vs Taper Ratio for AR = 10, 8, 6, 4');
+legend("AR=10","AR=8","AR=6","AR=4","Location","northeast");
