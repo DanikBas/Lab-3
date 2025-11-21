@@ -1,7 +1,14 @@
+clear; clc;close all;
+
 %Integral function
+b = 36; %feet
+C_r = 5 + (4/12); %feet
+C_t = 3 + (7/12); %feet
+S = .5*(C_r*C_t)*b; 
+cd_fit_tip = 2;
 
 y = linspace(0,b,(b/100));
-fun = @(y) c_d(y)*c(y);
+fun = @(y)cd_fit_tip(y)*c(y);
 
 CD_0 = (1/S)*integral(fun,(-b/2),(b/2));
 
@@ -15,3 +22,22 @@ c_init = linspace(c_r,c_t,116);
 %116 is the amount of inches from 9' 8''
 
 c_fin = linspace(c_t,c_r,116);
+
+%% 3. Perform Numerical Integration
+
+% Define the limits of integration: from -b/2 to b/2
+B_HALF = SPAN_B / 2.0;
+
+% Create an anonymous function handle for the integrand. 
+% This tells the 'integral' function which helper function to use (integrand_func).
+integrand = @(y) integrand_func(y, SPAN_B, CHORD_ROOT, TAPER_RATIO, ...
+                                 ALPHA_INCIDENCE, A0_SECTION, ALPHA_L0, ...
+                                 CD_MIN_PROFILE, K_POLAR);
+
+% Calculate the integral of [cd(y) * c(y)] dy
+Integral_Result = integral(integrand, -B_HALF, B_HALF);
+
+% Calculate the Profile Drag Coefficient (CD,0)
+C_D0_PROFILE = (1 / PLANFORM_AREA_S) * Integral_Result;
+
+
