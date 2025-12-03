@@ -78,16 +78,19 @@ cd_model = polyval(p_tip, cl_model);            % cd(cl(alpha))
 
 % total drag
 % cd_model is profile drag
-C_Dtot = C_Di + cd_model; % GOOD
+const = 1800;
+C_Dtot = C_Di * const + cd_model; % GOOD
 
 
 
 % PLOT coeffs vs alpha
 figure; hold on
 
-plot(alpha_tip_deg, cd_model, Color='r')
+plot(alpha_tip_deg, C_Di*const, Color='b');
 
-plot(alpha_tip_deg, C_Dtot, Color='g')
+plot(alpha_tip_deg, cd_model, Color='g')
+
+plot(alpha_tip_deg, C_Dtot, Color='r')
 
 
 xlabel('Angle of Attack (deg)')
@@ -96,9 +99,10 @@ legend('Induced Drag','Profile Drag','Total Drag')
 grid on
 %ylim([0 0.05])
 
-figure; hold on
-plot(deg2rad(alpha_tip_deg), C_Di, Color='b');
-xlabel('Angle of Attack (deg)')
-ylabel('Drag Coefficient')
-legend('Induced Drag','Profile Drag','Total Drag')
-grid on
+% figure; hold on
+% plot(deg2rad(alpha_tip_deg), C_Di, Color='b');
+% xlabel('Angle of Attack (deg)')
+% ylabel('Drag Coefficient')
+% legend('Induced Drag','Profile Drag','Total Drag')
+% ylim([0 0.05])
+% grid on
